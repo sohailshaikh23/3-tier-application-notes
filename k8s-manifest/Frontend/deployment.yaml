@@ -2,12 +2,13 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: frontend
-  namespace: three-tier
+  namespace: notes-webapp
   labels:
     role: frontend
     env: demo
+    app: frontend
 spec: 
-  replicas: 1
+  replicas: 3
   strategy:
     type: RollingUpdate
     rollingUpdate:
@@ -16,19 +17,32 @@ spec:
   selector:
     matchLabels: 
       role: frontend
+      app: frontend
   template:
     metadata:
       labels:
         role: frontend
+        app: frontend
     spec: 
-      imagePullSecrets:
-      - name: ecr-registry-secret
       containers:
       - name: frontend
         image: 407622020962.dkr.ecr.us-east-1.amazonaws.com/frontend:latest
         imagePullPolicy: Always
         env:
           - name: REACT_APP_BACKEND_URL
-            value: "http://backend.amanpathakdevops.study/api/tasks"
+            value: "http://webapp.oceanofthings.shop/api/tasks"
         ports:
         - containerPort: 3000
+        livenessProbe:
+          httpGet:
+            path: /ok
+            port: 8080
+          initialDelaySeconds: 2
+          periodSeconds: 5
+        readinessProbe:
+          httpGet:
+             path: /ok
+             port: 8080
+          initialDelaySeconds: 5
+          periodSeconds: 5
+          successThreshold: 1

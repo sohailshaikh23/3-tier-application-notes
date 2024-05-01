@@ -1,14 +1,15 @@
 apiVersion: v1
 kind: Service
 metadata:
-  namespace: 3-tier
-  name: mongodb-svc
+  namespace: notes-webapp
+  name: mongo
+  labels:
+    app: db
 spec:
-  type: ClusterIP
+  ClusterIP: None
   selector:
-    app: mongodb
+    app: db
   ports:
-    - name: mongodb-svc
-    protocol: TCP
-    port: 27017
-    targetPort: 27017
+    - port: 27017
+      targetPort: 27017
+      

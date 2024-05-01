@@ -1,0 +1,39 @@
+version: "3.3"
+services:
+  frontend:
+    image: frontend:latest
+    container_name: frontend
+    ports:
+      - "3000:3000"
+    environment:
+      REACT_APP_BACKEND_URL: "http://15.207.108.244:3500/api/tasks"
+    networks:
+      - 3-tier
+
+  api:
+    image: backend:latest
+    container_name: api
+    ports:
+      - "3500:3500"
+    environment:
+      MONGO_CONN_STR: "mongodb://mongo:27017/todo"
+      MONGO_USERNAME: "admin"
+      MONGO_PASSWORD: "admin"
+    networks:
+      - 3-tier
+    depends_on:
+      - db
+
+  db:
+    image: mongo:4.4.6
+    container_name: mongo
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_USERNAME: "admin"
+      MONGO_PASSWORD: "admin"
+    networks:
+      - 3-tier
+
+networks:
+  3-tier:

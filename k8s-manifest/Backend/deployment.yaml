@@ -2,12 +2,13 @@ apiVersion: apps/v1
 kind: Deployment
 metadata: 
   name: api
-  namespace: 3-tier
+  namespace: notes-webapp
   labels: 
     role: api
     env: demo
+    app: api
 spec: 
-  replicas: 2
+  replicas: 3
   strategy: 
     type: RollingUpdate
     rollingUpdate:
@@ -16,20 +17,19 @@ spec:
   selector: 
     matchLabels:
       role: api
+      app: api
   template:
     metadata:
       labels:
         role: api
     spec:
-      imagePullSecrets:
-      - name: ecr-registry-secret
-      containers:
+     containers:
       - name: api
         image: # image
         imagePullPolicy: Always
         env:
           - name: MONGO_CONN_STR
-            value: mongodb://mongodb-svc:27017/todo?directConnection=true
+            value: mongodb://mongodb-0.mongodb,mongodb-1.mongodb,mongodb-2.mongodb:27017/todo?replicaSet=rs0
           - name: MONGO_USERNAME
             valueFrom:
               secretKeyRef:

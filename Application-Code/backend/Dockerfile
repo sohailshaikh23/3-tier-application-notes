@@ -1,7 +1,7 @@
 ########################## Stage 1: build stage as backend-builder #####################
 FROM node:14 AS backend-builder
 
-LABEL "myemail@gmail.com"
+LABEL maintainer="myemail@gmail.com"
 
 # setting up the working directory as /app
 WORKDIR /app

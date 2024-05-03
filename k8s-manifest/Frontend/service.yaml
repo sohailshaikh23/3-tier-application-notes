@@ -5,9 +5,10 @@ metadata:
   namespace: notes-webapp
 spec:
   ports:
-   - port: 80   # service port 
+   - protocol: TCP
+     port: 80   # service port 
      targetPort: 3000   # container port
-     protocol: TCP
+     name: http
   type: ClusterIP
   selector:
     role: frontend

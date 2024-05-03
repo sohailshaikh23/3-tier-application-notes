@@ -6,7 +6,7 @@ services:
     ports:
       - "3000:3000"
     environment:
-      REACT_APP_BACKEND_URL: "http://15.207.108.244:3500/api/tasks"
+      REACT_APP_BACKEND_URL: "http://15.207.108.244:8080/api/tasks"
     networks:
       - notes-webapp
 

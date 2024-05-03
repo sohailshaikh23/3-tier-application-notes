@@ -26,7 +26,7 @@ spec:
     spec: 
       containers:
       - name: frontend
-        image: 407622020962.dkr.ecr.us-east-1.amazonaws.com/frontend:latest
+        image: sohailshaikh23/3-tier_frontend:latest
         imagePullPolicy: Always
         env:
           - name: REACT_APP_BACKEND_URL
@@ -36,13 +36,13 @@ spec:
         livenessProbe:
           httpGet:
             path: /ok
-            port: 8080
-          initialDelaySeconds: 2
+            port: 3000
+          initialDelaySeconds: 5
           periodSeconds: 5
         readinessProbe:
           httpGet:
              path: /ok
-             port: 8080
+             port: 3000
           initialDelaySeconds: 5
           periodSeconds: 5
           successThreshold: 1

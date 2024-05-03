@@ -22,6 +22,7 @@ spec:
     metadata:
       labels:
         role: api
+        app: api
     spec:
      containers:
       - name: api

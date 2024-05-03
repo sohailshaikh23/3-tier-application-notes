@@ -6,7 +6,7 @@ metadata:
   labels:
     app: db
 spec:
-  ClusterIP: None
+  clusterIP: None
   selector:
     app: db
   ports:

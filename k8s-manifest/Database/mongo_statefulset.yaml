@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
       - name: mongo
-        image: sohailshaikh23/3-tier_mong4.4.6
+        image: sohailshaikh23/3-tier_mong:4.4.6
         command:
           - "numactl"
           - "--interleave=all"

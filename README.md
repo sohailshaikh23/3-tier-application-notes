@@ -140,9 +140,8 @@ docker push sohailshaikh23/3-tier_mongo:4.4.6
 deploy the containerize application using docker-compose tool 
 
 ```
-docker-compose up -d 
+docker compose up -d
 ```
-
 Test your Application's `frontend`
 
 ```
@@ -192,7 +191,7 @@ Step 1 : - Create a new cluster using eksctl CLI tool
 eksctl create cluster --name notes-webapp --region ap-south-1 --node-type t2.medium --nodes-min 2 --nodes-max 2
 ```
 or create manually
-         - Create EKS cluster with IAM Role `myAmazonEKSClusterRole` ,  along with it add `EBS CSI Driver` from add ons section {this Enable Amazon         Elastic Block Storage (EBS) within your cluster and it is responsible to create persistent volumes automatically}
+         - Create EKS cluster with IAM Role `myAmazonEKSClusterRole`, along with it add `EBS CSI Driver` from add ons section {this Enable Amazon         Elastic Block Storage (EBS) within your cluster and it is responsible to create persistent volumes automatically}
          - Create NodeGroup (2 nodes of t2.medium instance type) with IAM Role `myAmazonEKSNodeRole` 
 
 
@@ -201,7 +200,7 @@ Step 2 : - Use you Ubuntu instance as bastion host (t2.micro). attach an `IAM ro
 
 Once the Cluster is ready run the command to connect EKS cluster with your kubectl tool:
 ```
-aws eks update-kubeconfig  --name notes-webapp --region ap-south-1
+aws eks update-kubeconfig --name notes-webapp --region ap-south-1
 ```
 
 check whether your kubectl is connected to your EKS cluster or not
@@ -210,14 +209,15 @@ kubectl get nodes
 ```
 
 
-## Prerequisites for EKS cluster
-
-### 1 create IAM role and serviceAccount for AWS Load Balancer
+### Phase 3: Prerequisites for EKS cluster
+ 
+create IAM role and serviceAccount for AWS Load Balancer
 
 You can skip these 2 step (commands) if done previously 
 ``` 
 curl -O https://raw.githubusercontent.com/kubernetes-sigs/aws-load-balancer-controller/v2.5.4/docs/install/iam_policy.json
 ```
+Create a policy in IAM
 ```
 aws iam create-policy --policy-name AWSLoadBalancerControllerIAMPolicyForEKS --policy-document file://iam_policy.json
 ````
@@ -258,30 +258,38 @@ kubectl get deployment -n kube-system aws-load-balancer-controller
 
 
 
-### Phase 3 : kubernetes Manifests creation for notes-webapp 
+### Phase 4 : kubernetes Manifests creation for notes-webapp 
 
 **Create a custom Namespace as notes-webapp **
 ``` 
 kubectl create namespace notes-webapp
 ```
 
-** set  this namespace as default **
-
+** set this namespace as default **
 ```
 kubectl config set-context --current --namespace notes-webapp
-
 ```
 
 **MONGO Database deployment**
 
 create Mongo statefulset with Persistent volumes :
-
 ```
 kubectl apply -f mongo_deployment.yml
 ```
+
 create Mongo Service : 
 ```
 kubectl apply -f mongo-svc.yaml
+```
+
+
+Check whether EBS is created, PV/PVC is created or not
+```
+kubectl get pv
+```
+
+```
+kubectl get pvc
 ```
 
 
@@ -324,7 +332,6 @@ db.tasks.find().pretty();
 
 **Backend/API deployment Setup**
 
-
 Create and apply Secrets files
 ```
 kubectl apply -f mongo_secret.yml 
@@ -332,16 +339,21 @@ kubectl apply -f mongo_secret.yml
 
 Create and apply backend deployment files
 ```
-kubectl apply -f backend_deployment.yml
+kubectl apply -f deployment.yml
 ```
 
 Create and apply backend service files
 ```
-kubectl apply -f backend_svc.yml
+kubectl apply -f service.yml
+```
+
+Check whether Backend is connected to mono or not
+```
+docker logs api
 ```
 
 
-frontend deployment : NOTE :: for frontend deployment you can simply use service type as `LoadBalancer` and access from browser, but it is not good practice beause
+frontend deployment NOTE :: for frontend deployment you can simply use service type as `LoadBalancer` and access from browser, but it is not good practice beause
 I. It is costly to maintain seperate load balancer for each service
 II. There is no URL based routing (path or host based routing)
 
@@ -354,13 +366,12 @@ so, the best practice is to use ingress controller for internal routing.
 
 Create and apply frontend deployment files
 ```
-kubectl apply -f frontend_deployment.yml
+kubectl apply -f deployment.yml
 ```
-
 
 Create and apply frontend service files 
 ```
-kubectl apply -f frontend_svc.yml       
+kubectl apply -f service.yml       
 ```
 
 
@@ -369,11 +380,24 @@ Check all the applied services
 kubectl get all 
 ```
 
+Check the logs of frontend
+```
+kubectl logs frontend
+```
 
-Create and apply Ingress controller manifest and apply to you cluster
+
+Create and apply Ingress controller manifest and apply to you cluster for internal routing
 ```
 kubectl apply -f ingress.yaml
 ```
+
+Check you ingress controller
+```
+kubectl get ingress
+```
+
+
+
 
 ### Cleanup
 - To delete the EKS cluster:

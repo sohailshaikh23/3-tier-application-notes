@@ -16,6 +16,7 @@ curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip
 sudo apt install unzip
 unzip awscliv2.zip
 sudo ./aws/install -i /usr/local/aws-cli -b /usr/local/bin --update
+aws configure
 ```
 
 ### Setup 2 : kubectl
@@ -52,7 +53,7 @@ eksctl version
 ``` shell
 sudo apt-get update -y
 sudo apt install docker.io -y
-sudo chown 777 /var/run/docker.sock
+sudo chmod 777 /var/run/docker.sock
 docker ps
 ```
 
@@ -213,11 +214,13 @@ kubectl get nodes
  
 create IAM role and serviceAccount for AWS Load Balancer
 
-You can skip these 2 step (commands) if done previously 
+You can skip these 2 step (commands) {if done previously }
+
+I - Download the policy 
 ``` 
 curl -O https://raw.githubusercontent.com/kubernetes-sigs/aws-load-balancer-controller/v2.5.4/docs/install/iam_policy.json
 ```
-Create a policy in IAM
+II - Create a policy in IAM
 ```
 aws iam create-policy --policy-name AWSLoadBalancerControllerIAMPolicyForEKS --policy-document file://iam_policy.json
 ````
@@ -272,9 +275,15 @@ kubectl config set-context --current --namespace notes-webapp
 
 **MONGO Database deployment**
 
+
+Create and apply Secrets files
+```
+kubectl apply -f mongo_secret.yml 
+```
+
 create Mongo statefulset with Persistent volumes :
 ```
-kubectl apply -f mongo_deployment.yml
+kubectl apply -f mongo_deployment.yml   # ErrImagePull because invalid image provided
 ```
 
 create Mongo Service : 
@@ -332,10 +341,6 @@ db.tasks.find().pretty();
 
 **Backend/API deployment Setup**
 
-Create and apply Secrets files
-```
-kubectl apply -f mongo_secret.yml 
-```
 
 Create and apply backend deployment files
 ```

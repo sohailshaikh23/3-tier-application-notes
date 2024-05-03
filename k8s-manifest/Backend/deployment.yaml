@@ -25,7 +25,7 @@ spec:
     spec:
      containers:
       - name: api
-        image: # image
+        image: sohailshaikh23/3-tier_backend:latest
         imagePullPolicy: Always
         env:
           - name: MONGO_CONN_STR

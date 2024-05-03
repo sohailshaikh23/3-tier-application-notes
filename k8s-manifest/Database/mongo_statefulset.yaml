@@ -26,7 +26,7 @@ spec:
           - "0.1"
           - "--bind_ip"
           - "0.0.0.0"
-          - "replSet"
+          - "--replSet"
           - "rs0"
         ports:
           - containerPort: 27017

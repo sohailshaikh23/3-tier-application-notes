@@ -29,7 +29,7 @@ spec:
         imagePullPolicy: Always
         env:
           - name: MONGO_CONN_STR
-            value: mongodb://mongodb-0.mongodb,mongodb-1.mongodb,mongodb-2.mongodb:27017/todo?replicaSet=rs0
+            value: mongo://mongo-0.mongo,mongo-1.mongo,mongo-2.mongo:27017/todo?replicaSet=rs0
           - name: MONGO_USERNAME
             valueFrom:
               secretKeyRef:

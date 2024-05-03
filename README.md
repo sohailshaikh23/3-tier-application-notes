@@ -19,7 +19,7 @@ sudo ./aws/install -i /usr/local/aws-cli -b /usr/local/bin --update
 aws configure
 ```
 
-### Setup 2 : kubectl
+### Setup 2 : Install kubectl {v1.19.6}
 ``` 
 curl -o kubectl https://amazon-eks.s3.us-west-2.amazonaws.com/1.19.6/2021-01-05/bin/linux/amd64/kubectl
 ```
@@ -36,7 +36,7 @@ kubectl version --short --client
 ```
 
 
-### Setup 3 : eksctl
+### Setup 3 : eksctl {0.176.0}
 ``` shell
 curl --silent --location "https://github.com/weaveworks/eksctl/releases/latest/download/eksctl_$(uname -s)_amd64.tar.gz" | tar xz -C /tmp
 ```
@@ -183,7 +183,7 @@ View your database content
 db.tasks.find() 
 ```
 
-*******************FINISHED TILL HERE***************
+
 
 ### Phase 2: EKS Cluster for deployment
 
@@ -283,14 +283,13 @@ kubectl apply -f mongo_secret.yml
 
 create Mongo statefulset with Persistent volumes :
 ```
-kubectl apply -f mongo_deployment.yml   # ErrImagePull because invalid image provided
+kubectl apply -f mongo_deployment.yml   
 ```
 
 create Mongo Service : 
 ```
 kubectl apply -f mongo-svc.yaml
 ```
-
 
 Check whether EBS is created, PV/PVC is created or not
 ```
@@ -398,7 +397,7 @@ kubectl apply -f ingress.yaml
 
 Check you ingress controller
 ```
-kubectl get ingress
+kubectl get ingress # fail build model,address field is blank
 ```
 
 
